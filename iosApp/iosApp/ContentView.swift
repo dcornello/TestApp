@@ -3,7 +3,8 @@ import shared
 
 struct ContentView: View {
 	let greet = Greeting().greet()
-    
+// 	let greet = GreetingHelper().greet()
+
     var test = Greeting().getEnumTest()
     
     var txt : String {

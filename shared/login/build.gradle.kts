@@ -25,10 +25,12 @@ kotlin {
     sourceSets {
 
         val firebase_version = "1.8.0"
+        val koin_version = "3.2.0"
 
         val commonMain by getting {
             dependencies {
                 implementation("dev.gitlive:firebase-auth:$firebase_version")
+                implementation("io.insert-koin:koin-core:$koin_version")
             }
         }
         val commonTest by getting {
@@ -36,7 +38,11 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementation("io.insert-koin:koin-android:$koin_version")
+            }
+        }
         val androidUnitTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
