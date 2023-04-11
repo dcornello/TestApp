@@ -16,7 +16,9 @@ import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 import com.treatwell.testkmm.testapp.Greeting
 
 class MainActivity : ComponentActivity() {
+
     val createAccount = SignUpUseCase()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -25,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    GreetingView(Greeting().greet(), { createAccount() })
+                    GreetingView(Greeting().greet(), {  })
                 }
             }
         }
