@@ -4,11 +4,11 @@ interface AuthenticationRepository {
 
     fun isUserLoggedIn(): Boolean
 
-    fun signupUser()
+    suspend fun signupUser()
 
-    fun loginUser()
+    suspend fun loginUser()
 
-    fun logout()
+    suspend fun logout()
 
     fun getUserData()
 }

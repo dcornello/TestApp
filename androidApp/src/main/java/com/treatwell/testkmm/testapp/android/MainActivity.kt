@@ -1,7 +1,6 @@
 package com.treatwell.testkmm.testapp.android
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,12 +11,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 import com.treatwell.testkmm.testapp.Greeting
+import com.treatwell.testkmm.testapp.android.login.presentation.LoginScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
-
-    val createAccount = SignUpUseCase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +25,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    GreetingView(Greeting().greet(), {  })
+                    val viewModel: LoginScreenViewModel = koinViewModel()
+                    GreetingView(Greeting().greet(), viewModel::createAccount)
                 }
             }
         }

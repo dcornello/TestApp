@@ -39,8 +39,17 @@ android {
 }
 
 dependencies {
+
+    val koin_version = "3.2.0"
+    val koin_android_version = "3.2.0"
+    val koin_android_compose_version = "3.2.0"
+
     implementation(project(":shared"))
     implementation(project(":shared:login"))
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation("io.insert-koin:koin-android:$koin_android_version")
+    implementation("io.insert-koin:koin-androidx-compose:$koin_android_compose_version")
+
     implementation("androidx.compose.ui:ui:1.3.1")
     implementation("androidx.compose.ui:ui-tooling:1.3.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.3.1")
@@ -48,3 +57,4 @@ dependencies {
     implementation("androidx.compose.material:material:1.3.1")
     implementation("androidx.activity:activity-compose:1.6.1")
 }
+apply(plugin = "com.google.gms.google-services")

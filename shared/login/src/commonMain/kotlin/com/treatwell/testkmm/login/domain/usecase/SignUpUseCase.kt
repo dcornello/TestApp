@@ -1,11 +1,11 @@
 package com.treatwell.testkmm.login.domain.usecase
 
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.auth
+import com.treatwell.testkmm.login.domain.repository.AuthenticationRepository
 
 
-class SignUpUseCase {
-    suspend operator fun invoke(){
-        Firebase.auth.createUserWithEmailAndPassword("diego.cornello@treatwell.com", "Password_123")
+class SignUpUseCase(private val authenticationRepository: AuthenticationRepository) {
+
+    suspend operator fun invoke() {
+        authenticationRepository.signupUser()
     }
 }
