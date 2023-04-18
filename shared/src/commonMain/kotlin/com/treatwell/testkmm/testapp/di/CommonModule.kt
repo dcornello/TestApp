@@ -1,4 +1,4 @@
-package com.treatwell.testkmm.di
+package com.treatwell.testkmm.testapp.di
 
 import com.treatwell.testkmm.login.di.loginModule
 
