@@ -19,6 +19,7 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "login"
+            isStatic = true
         }
     }
 
@@ -29,7 +30,7 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                implementation("dev.gitlive:firebase-auth:$firebase_version")
+                api("dev.gitlive:firebase-auth:$firebase_version")
                 implementation("io.insert-koin:koin-core:$koin_version")
             }
         }

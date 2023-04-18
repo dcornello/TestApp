@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    kotlin("plugin.serialization") version "1.8.10"
 }
 
 kotlin {
@@ -19,6 +20,7 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
+            isStatic = true
         }
     }
 
@@ -30,7 +32,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":shared:login"))
-                implementation("dev.gitlive:firebase-app:$firebase_version")
                 implementation("io.insert-koin:koin-core:$koin_version")
             }
         }
@@ -53,9 +54,6 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
-            dependencies {
-
-            }
         }
         val iosX64Test by getting
         val iosArm64Test by getting

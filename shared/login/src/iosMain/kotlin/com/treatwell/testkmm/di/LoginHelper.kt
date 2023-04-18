@@ -8,9 +8,3 @@ import org.koin.core.context.startKoin
 class LoginHelper : KoinComponent {
     private val signUpUseCase: SignUpUseCase by inject()
 }
-
-fun initKoin() {
-    startKoin {
-        modules(commonsModule())
-    }
-}
