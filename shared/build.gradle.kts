@@ -20,6 +20,7 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
+            export(project(":shared:login"))
             isStatic = true
         }
     }
@@ -31,7 +32,7 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                implementation(project(":shared:login"))
+                api(project(":shared:login"))
                 implementation("io.insert-koin:koin-core:$koin_version")
             }
         }

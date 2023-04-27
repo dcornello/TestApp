@@ -6,5 +6,5 @@ import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 
 class LoginHelper : KoinComponent {
-    private val signUpUseCase: SignUpUseCase by inject()
+    val signUpUseCase: SignUpUseCase by inject()
 }
