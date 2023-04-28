@@ -26,7 +26,7 @@ class LoginScreenViewModel {
     func createAccount() {
         Task.init {
             do {
-                try await usecase.invoke()
+                try await usecase.invoke(email: "cornello.diego89@gmail.com", password: "Password123456")
                 print("done")
             } catch {
                 print("error \(error)")

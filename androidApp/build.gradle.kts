@@ -45,7 +45,6 @@ dependencies {
     val koin_android_compose_version = "3.2.0"
 
     implementation(project(":shared"))
-//    implementation(project(":shared:login"))
     implementation("io.insert-koin:koin-core:$koin_version")
     implementation("io.insert-koin:koin-android:$koin_android_version")
     implementation("io.insert-koin:koin-androidx-compose:$koin_android_compose_version")

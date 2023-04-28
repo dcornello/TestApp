@@ -1,15 +1,23 @@
 package com.treatwell.testkmm.login.domain.usecase
 
-import androidx.core.util.PatternsCompat
-
-class EmailValidationUseCase() {
+class EmailValidationUseCase{
     operator fun invoke(email: String): Result<Any?> {
-        return when{
+        return when {
             email.isBlank() -> Result.failure(EmailValidationThrowable.EmptyEmailThrowable)
-            PatternsCompat.EMAIL_ADDRESS.matcher(email).matches().not() -> Result.failure(EmailValidationThrowable.WrongFormatEmailThrowable)
+            email.matches(emailAddressRegex).not() -> Result.failure(EmailValidationThrowable.WrongFormatEmailThrowable)
             else -> Result.success(null)
         }
     }
+
+    private val emailAddressRegex = Regex(
+        "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                "\\@" +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                "(" +
+                "\\." +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                ")+"
+    )
 }
 
 sealed class EmailValidationThrowable : Throwable() {

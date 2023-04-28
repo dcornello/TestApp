@@ -31,7 +31,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("dev.gitlive:firebase-auth:$firebase_version")
-                implementation("androidx.core:core:1.10.0")
                 implementation("io.insert-koin:koin-core:$koin_version")
             }
         }
