@@ -2,7 +2,7 @@ package com.treatwell.testkmm.login.domain.usecase
 
 import androidx.core.util.PatternsCompat
 
-class EmailValidationUseCase {
+class EmailValidationUseCase() {
     operator fun invoke(email: String): Result<Any?> {
         return when{
             email.isBlank() -> Result.failure(EmailValidationThrowable.EmptyEmailThrowable)

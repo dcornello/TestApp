@@ -1,8 +1,16 @@
 package com.treatwell.testkmm.login.presentation
 
+import com.treatwell.testkmm.login.domain.usecase.EmailValidationUseCase
+import com.treatwell.testkmm.login.domain.usecase.PasswordValidationUseCase
+import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
+
 interface LoginScreenViewModelPact {
 
-    val uiState: LoginScreenUIState
+    var uiState: LoginScreenUIState
+    val signUpUseCase: SignUpUseCase
+    val emailValidationUseCase: EmailValidationUseCase
+    val passwordValidationUseCase: PasswordValidationUseCase
+
     val userActions: LoginScreenUserActions
         get() = LoginScreenUserActions(
             onSignupClicked = ::signup,
@@ -41,7 +49,7 @@ enum class PasswordError {
     Short
 }
 
-enum class SignupError{
+enum class SignupError {
     UNKNOWN
 }
 

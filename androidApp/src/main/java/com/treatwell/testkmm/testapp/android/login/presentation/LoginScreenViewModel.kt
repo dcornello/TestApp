@@ -23,15 +23,24 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginScreenViewModel(
-    private val signUpUseCase: SignUpUseCase,
-    private val emailValidationUseCase: EmailValidationUseCase,
-    private val passwordValidationUseCase: PasswordValidationUseCase
+    override val signUpUseCase: SignUpUseCase,
+    override val emailValidationUseCase: EmailValidationUseCase,
+    override val passwordValidationUseCase: PasswordValidationUseCase
 ) : ViewModel(), LoginScreenViewModelPact {
 
-    override val uiState: LoginScreenUIState
-        get() = LoginScreenUIState()
+    override var uiState: LoginScreenUIState
+        get() = _viewState.value
+        set(newState) {
+            _viewState.update { newState }
+        }
 
-    private val _viewState = MutableStateFlow(uiState)
+
+    private val _viewState = MutableStateFlow(
+        LoginScreenUIState(
+            email = "cornello.diego89@gmail.com",
+            password = "Password123"
+        )
+    )
     val viewState = _viewState.asStateFlow()
 
     private val _sideEffects = MutableSharedFlow<LoginScreenSideEffect>()
@@ -40,27 +49,24 @@ class LoginScreenViewModel(
     override fun checkValidityEmail(email: String): Result<Any?> {
         return emailValidationUseCase(email = email)
             .onSuccess {
-                _viewState.update {
-                    it.copy(
-                        email = email,
-                        emailError = null
-                    )
-                }
+                uiState = uiState.copy(
+                    email = email,
+                    emailError = null
+                )
             }
             .onFailure { error ->
                 when (error) {
-                    is EmailValidationThrowable.EmptyEmailThrowable -> _viewState.update {
-                        it.copy(
+                    is EmailValidationThrowable.EmptyEmailThrowable ->
+                        uiState = uiState.copy(
                             email = email,
                             emailError = EmailError.Empty
                         )
-                    }
-                    is EmailValidationThrowable.WrongFormatEmailThrowable -> _viewState.update {
-                        it.copy(
+
+                    is EmailValidationThrowable.WrongFormatEmailThrowable ->
+                        uiState = uiState.copy(
                             email = email,
                             emailError = EmailError.WrongFormat
                         )
-                    }
                 }
             }
     }
@@ -68,52 +74,48 @@ class LoginScreenViewModel(
     override fun checkValidityPassword(password: String): Result<Any?> {
         return passwordValidationUseCase(password)
             .onSuccess {
-                _viewState.update {
-                    it.copy(
-                        password = password,
-                        passwordError = null
-                    )
-                }
+                uiState = uiState.copy(
+                    password = password,
+                    passwordError = null
+                )
             }
             .onFailure { error ->
                 when (error) {
-                    is PasswordValidationThrowable.EmptyPasswordThrowable -> _viewState.update {
-                        it.copy(
+                    is PasswordValidationThrowable.EmptyPasswordThrowable ->
+                        uiState = uiState.copy(
                             password = password,
                             passwordError = PasswordError.Empty
                         )
-                    }
-                    is PasswordValidationThrowable.ShortPasswordThrowable -> _viewState.update {
-                        it.copy(
+                    is PasswordValidationThrowable.ShortPasswordThrowable ->
+                        uiState = uiState.copy(
                             password = password,
                             passwordError = PasswordError.Short
                         )
-                    }
                 }
             }
     }
 
     override fun resetErrorState() {
-        _viewState.update { it.copy(userErrorMessage = null) }
+        uiState = uiState.copy(userErrorMessage = null)
     }
 
     override fun signup() {
-        val emailCheck = checkValidityEmail(viewState.value.email)
-        val passwordCheck = checkValidityPassword(viewState.value.password)
+        val email = uiState.email
+        val password = uiState.password
+        val emailCheck = checkValidityEmail(email)
+        val passwordCheck = checkValidityPassword(password)
         if (emailCheck.isSuccess && passwordCheck.isSuccess) {
-            _viewState.update { it.copy(showLoading = true) }
+            uiState = uiState.copy(showLoading = true)
             viewModelScope.launch(Dispatchers.IO) {
-                signUpUseCase()
+                signUpUseCase(email = email, password = password)
                     .onFailure {
-                        _viewState.update {
-                            it.copy(
-                                showLoading = false,
-                                userErrorMessage = SignupError.UNKNOWN
-                            )
-                        }
+                        uiState = uiState.copy(
+                            showLoading = false,
+                            userErrorMessage = SignupError.UNKNOWN
+                        )
                     }
                     .onSuccess {
-                        _viewState.update { it.copy(showLoading = false) }
+                        uiState = uiState.copy(showLoading = false)
                         sendSideEffect(LoginScreenSideEffect.GoToLogoutScreen)
                     }
             }
