@@ -21,8 +21,14 @@ class AuthenticationRepositoryImpl : AuthenticationRepository {
         }
     }
 
-    override suspend fun loginUser() {
-        TODO("Not yet implemented")
+    override suspend fun loginUser(email: String, password: String): Result<User> {
+        return try {
+            Firebase.auth.signInWithEmailAndPassword(email, password).user?.let {
+                Result.success(User(uid = it.uid, email = it.email))
+            } ?: Result.failure(Throwable())
+        } catch (e: Exception) {
+            Result.failure(e.cause ?: Throwable())
+        }
     }
 
     override suspend fun logout() {
