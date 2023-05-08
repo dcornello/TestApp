@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LoginScreen: View {
     
-    @StateObject
+    @EnvironmentObject
     var navigator : LoginNavigator
     
     var body: some View {
@@ -20,7 +20,7 @@ struct LoginScreen: View {
 
 struct LoginScreen_Previews: PreviewProvider {
     static var previews: some View {
-        LoginScreen(navigator: LoginNavigator())
+        LoginScreen()
     }
 }
 

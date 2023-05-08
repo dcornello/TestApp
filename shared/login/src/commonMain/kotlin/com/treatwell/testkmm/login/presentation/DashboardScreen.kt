@@ -14,7 +14,7 @@ abstract class DashboardScreenViewModelPact {
         )
     }
 
-    private fun goToLogin() {
+    fun goToLogin() {
         sendSideEffect(DashboardScreenSideEffect.GoToLoginScreen)
     }
 
