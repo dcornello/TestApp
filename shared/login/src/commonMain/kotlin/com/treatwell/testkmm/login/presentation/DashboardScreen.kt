@@ -4,35 +4,26 @@ import com.treatwell.testkmm.login.domain.usecase.FetchUserUseCase
 import com.treatwell.testkmm.login.domain.usecase.IsUserLoggedInUseCase
 import com.treatwell.testkmm.login.domain.usecase.LogOutUseCase
 
-abstract class DashboardScreenViewModelPact {
-
-    abstract val isUserLoggedInUseCase: IsUserLoggedInUseCase
-    abstract val logOutUseCase: LogOutUseCase
-    abstract val fetchUserUseCase: FetchUserUseCase
-
-//    fun getUserActions(): DashboardScreenUserActions {
-//        return DashboardScreenUserActions(
-//            onGoLogInButtonClicked = ::goToLogin,
-//            onLogOutButtonClicked = ::logout
-//        )
-//    }
-
-    val userActions: DashboardScreenUserActions =
-        DashboardScreenUserActions(
+interface IDashboardScreenViewModel {
+    val isUserLoggedInUseCase: IsUserLoggedInUseCase
+    val logOutUseCase: LogOutUseCase
+    val fetchUserUseCase: FetchUserUseCase
+    val userActions: DashboardScreenUserActions
+        get() = DashboardScreenUserActions(
             onGoLogInButtonClicked = ::goToLogin,
             onLogOutButtonClicked = ::logout
         )
 
-    private fun goToLogin() {
+    fun logout()
+    fun sendSideEffect(sideEffect: DashboardScreenSideEffect)
+    fun updateUiState(uiState: DashboardScreenUIState)
+    fun goToLogin() {
         sendSideEffect(DashboardScreenSideEffect.GoToLoginScreen)
     }
-
-    abstract fun logout()
-
-    abstract fun sendSideEffect(sideEffect: DashboardScreenSideEffect)
-
-    abstract fun updateUiState(uiState: DashboardScreenUIState)
 }
+
+// Use this for iOs automatic implementation
+abstract class DashboardScreenViewModel : IDashboardScreenViewModel
 
 data class DashboardScreenUIState(
     val showLoggedInView: Boolean = false

@@ -50,7 +50,7 @@ struct DashboardScreen_Previews: PreviewProvider {
     }
 }
 
-class DashbardViewModel : DashboardScreenViewModelPact, ObservableObject {
+class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
         
     @Published
     var sideEffects: [DashboardScreenSideEffect] = []

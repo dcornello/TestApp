@@ -10,7 +10,7 @@ import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 import com.treatwell.testkmm.login.presentation.EmailError
 import com.treatwell.testkmm.login.presentation.LoginScreenSideEffect
 import com.treatwell.testkmm.login.presentation.LoginScreenUIState
-import com.treatwell.testkmm.login.presentation.LoginScreenViewModelPact
+import com.treatwell.testkmm.login.presentation.ILoginScreenViewModel
 import com.treatwell.testkmm.login.presentation.PasswordError
 import com.treatwell.testkmm.login.presentation.SignupError
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ class LoginScreenViewModel(
     override val signUpUseCase: SignUpUseCase,
     override val emailValidationUseCase: EmailValidationUseCase,
     override val passwordValidationUseCase: PasswordValidationUseCase
-) : ViewModel(), LoginScreenViewModelPact {
+) : ViewModel(), ILoginScreenViewModel {
 
     override var uiState: LoginScreenUIState
         get() = _viewState.value

@@ -4,7 +4,7 @@ import com.treatwell.testkmm.login.domain.usecase.EmailValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 
-interface LoginScreenViewModelPact {
+interface ILoginScreenViewModel {
 
     var uiState: LoginScreenUIState
     val signUpUseCase: SignUpUseCase
@@ -29,6 +29,9 @@ interface LoginScreenViewModelPact {
 
     fun sendSideEffect(sideEffect: LoginScreenSideEffect)
 }
+
+// Use this for iOs automatic implementation
+abstract class LoginScreenViewModel : ILoginScreenViewModel
 
 data class LoginScreenUIState(
     val email: String = "",
