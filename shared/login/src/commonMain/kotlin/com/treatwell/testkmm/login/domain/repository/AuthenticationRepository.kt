@@ -10,7 +10,7 @@ interface AuthenticationRepository {
 
     suspend fun loginUser(email: String = "diego.cornello@treatwell.com", password: String = "Password_123"): Result<User>
 
-    suspend fun logout()
+    suspend fun logout(): Result<String>
 
-    fun getUserData()
+    fun getUserData(): User?
 }

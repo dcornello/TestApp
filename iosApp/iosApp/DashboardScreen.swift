@@ -23,8 +23,9 @@ struct DashbardScreen: View {
             Text("Dashboard")
             if(viewModel.uiState.showLoggedInView){
                 Text("loggedIn")
+                Button("LogOut", action: viewModel.userActions.onLogOutButtonClicked)
             }else{
-                Button("goToLogin", action: viewModel.getUserActions().onGoLogInButtonClicked)
+                Button("goToLogin", action: viewModel.userActions.onGoLogInButtonClicked)
             }
         }.onChange(of: viewModel.sideEffects, perform: {value in
             if let event = value.last {
@@ -51,17 +52,24 @@ struct DashboardScreen_Previews: PreviewProvider {
 
 class DashbardViewModel : DashboardScreenViewModelPact, ObservableObject {
         
-    @Published var sideEffects: [DashboardScreenSideEffect] = []
-        
+    @Published
+    var sideEffects: [DashboardScreenSideEffect] = []
+    
+    @Published
+    public private(set) var uiState :DashboardScreenUIState = DashboardScreenUIState(showLoggedInView: false)
+    
     override var isUserLoggedInUseCase: IsUserLoggedInUseCase {
         return LoginHelper().isUserLoggedInUseCase
     }
     
-    override init() {
-        super.init()
-        self.uiState = DashboardScreenUIState(showLoggedInView: isUserLoggedInUseCase.invoke())
+    override var logOutUseCase: LogOutUseCase {
+        return LoginHelper().logOutUseCase
     }
     
+    override var fetchUserUseCase: FetchUserUseCase{
+        return LoginHelper().fetchUserUseCase
+    }
+        
     deinit {
         sideEffects.removeAll()
     }
@@ -69,5 +77,20 @@ class DashbardViewModel : DashboardScreenViewModelPact, ObservableObject {
     override func sendSideEffect(sideEffect: DashboardScreenSideEffect) {
         sideEffects.append(sideEffect)
     }
-
+    
+    override func updateUiState(uiState: DashboardScreenUIState) {
+        self.uiState = uiState
+    }
+        
+    override func logout() {
+        Task.init {
+            do {
+                let result = try await logOutUseCase.invoke()
+                print("isUserLoggedInUseCase \(String(describing: isUserLoggedInUseCase.invoke()))")
+                print("fetchUserUseCase \(String(describing: fetchUserUseCase.invoke()))")
+            } catch {
+                print("error \(error)")
+            }
+        }
+    }
 }

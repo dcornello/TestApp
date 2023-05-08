@@ -8,7 +8,7 @@ import dev.gitlive.firebase.auth.auth
 class AuthenticationRepositoryImpl : AuthenticationRepository {
 
     override fun isUserLoggedIn(): Boolean {
-        return Firebase.auth.currentUser != null
+        return getUserData() != null
     }
 
     override suspend fun signupUser(email: String, password: String): Result<User> {
@@ -31,11 +31,18 @@ class AuthenticationRepositoryImpl : AuthenticationRepository {
         }
     }
 
-    override suspend fun logout() {
-        TODO("Not yet implemented")
+    override suspend fun logout(): Result<String> {
+        return try {
+            Firebase.auth.signOut()
+            Result.success("")
+        } catch (e: Exception) {
+            Result.failure(e.cause ?: Throwable())
+        }
     }
 
-    override fun getUserData() {
-        TODO("Not yet implemented")
-    }
+    override fun getUserData(): User? =
+        Firebase.auth.currentUser?.let {
+            User(uid = it.uid, email = it.email)
+        }
+
 }

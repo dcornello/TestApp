@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val viewModel: LoginScreenViewModel = koinViewModel()
-                    GreetingView(Greeting().greet(), viewModel::signup)
+                    GreetingView(Greeting().greet(), viewModel::login)
                 }
             }
         }

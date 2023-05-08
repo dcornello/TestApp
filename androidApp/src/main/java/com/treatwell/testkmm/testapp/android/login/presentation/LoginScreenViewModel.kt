@@ -99,7 +99,7 @@ class LoginScreenViewModel(
         uiState = uiState.copy(userErrorMessage = null)
     }
 
-    override fun signup() {
+    override fun login() {
         val email = uiState.email
         val password = uiState.password
         val emailCheck = checkValidityEmail(email)

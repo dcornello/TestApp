@@ -13,7 +13,7 @@ interface LoginScreenViewModelPact {
 
     val userActions: LoginScreenUserActions
         get() = LoginScreenUserActions(
-            onSignupClicked = ::signup,
+            onSignupClicked = ::login,
             onEmailValueChanged = ::checkValidityEmail,
             onPasswordValueChanged = ::checkValidityPassword,
             onUserErrorDismissed = ::resetErrorState
@@ -25,7 +25,7 @@ interface LoginScreenViewModelPact {
 
     fun resetErrorState()
 
-    fun signup()
+    fun login()
 
     fun sendSideEffect(sideEffect: LoginScreenSideEffect)
 }
