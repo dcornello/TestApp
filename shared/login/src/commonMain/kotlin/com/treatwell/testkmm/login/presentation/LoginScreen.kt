@@ -27,7 +27,7 @@ interface LoginScreenViewModelPact {
 
     fun signup()
 
-    fun sendSideEffect(sideEffect: LoginScreenSideEffect) // TODO remove this from interface and make it private?
+    fun sendSideEffect(sideEffect: LoginScreenSideEffect)
 }
 
 data class LoginScreenUIState(

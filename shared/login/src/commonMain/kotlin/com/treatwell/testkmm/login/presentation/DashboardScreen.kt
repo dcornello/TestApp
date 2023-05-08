@@ -14,11 +14,11 @@ abstract class DashboardScreenViewModelPact {
         )
     }
 
-    fun goToLogin() {
+    private fun goToLogin() {
         sendSideEffect(DashboardScreenSideEffect.GoToLoginScreen)
     }
 
-    abstract fun sendSideEffect(sideEffect: DashboardScreenSideEffect) // TODO remove this from interface and make it private?
+    abstract fun sendSideEffect(sideEffect: DashboardScreenSideEffect)
 }
 
 data class DashboardScreenUIState(

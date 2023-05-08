@@ -24,7 +24,7 @@ struct DashbardScreen: View {
             if(viewModel.uiState.showLoggedInView){
                 Text("loggedIn")
             }else{
-                Button("goToLogin", action: {viewModel.goToLogin()})
+                Button("goToLogin", action: viewModel.getUserActions().onGoLogInButtonClicked)
             }
         }.onChange(of: viewModel.sideEffects, perform: {value in
             if let event = value.last {
@@ -70,10 +70,4 @@ class DashbardViewModel : DashboardScreenViewModelPact, ObservableObject {
         sideEffects.append(sideEffect)
     }
 
-}
-
-class TTTEst : Test{
-    func test() -> String {
-        ""
-    }
 }
