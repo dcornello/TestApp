@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.treatwell.testkmm.login.data.SharedResult
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationUseCase
+import com.treatwell.testkmm.login.domain.usecase.LogInUseCase
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
@@ -26,7 +27,8 @@ import kotlinx.coroutines.launch
 class LoginScreenViewModel(
     override val signUpUseCase: SignUpUseCase,
     override val emailValidationUseCase: EmailValidationUseCase,
-    override val passwordValidationUseCase: PasswordValidationUseCase
+    override val passwordValidationUseCase: PasswordValidationUseCase,
+    override val logInUseCase: LogInUseCase
 ) : ViewModel(), ILoginScreenViewModel {
 
     override var __uiState: LoginScreenUIState

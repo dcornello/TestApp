@@ -3,6 +3,7 @@ package com.treatwell.testkmm.login.presentation
 import com.treatwell.testkmm.login.data.SharedResult
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationUseCase
+import com.treatwell.testkmm.login.domain.usecase.LogInUseCase
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
@@ -10,6 +11,7 @@ import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 interface ILoginScreenViewModel {
 
     var __uiState: LoginScreenUIState
+    val logInUseCase : LogInUseCase
     val signUpUseCase: SignUpUseCase
     val emailValidationUseCase: EmailValidationUseCase
     val passwordValidationUseCase: PasswordValidationUseCase
