@@ -7,6 +7,8 @@ sealed class SharedResult<out F, out S> {
             is Failure -> failed(failure)
             is Success -> succeeded(output)
         }
+
+    fun isSuccess(): Boolean = this is Success
 }
 
 data class Failure<out F>(val failure: F) : SharedResult<F, Nothing>()

@@ -1,5 +1,6 @@
 package com.treatwell.testkmm.login.presentation
 
+import com.treatwell.testkmm.login.data.SharedResult
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
@@ -19,9 +20,9 @@ interface ILoginScreenViewModel {
             onUserErrorDismissed = ::resetErrorState
         )
 
-    fun checkValidityEmail(email: String): Result<Any?>
+    fun checkValidityEmail(email: String): SharedResult<Throwable, Any?>
 
-    fun checkValidityPassword(password: String): Result<Any?>
+    fun checkValidityPassword(password: String): SharedResult<Throwable, Any?>
 
     fun resetErrorState()
 

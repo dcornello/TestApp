@@ -2,15 +2,16 @@ package com.treatwell.testkmm.testapp.android.login.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.treatwell.testkmm.login.data.SharedResult
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 import com.treatwell.testkmm.login.presentation.EmailError
+import com.treatwell.testkmm.login.presentation.ILoginScreenViewModel
 import com.treatwell.testkmm.login.presentation.LoginScreenSideEffect
 import com.treatwell.testkmm.login.presentation.LoginScreenUIState
-import com.treatwell.testkmm.login.presentation.ILoginScreenViewModel
 import com.treatwell.testkmm.login.presentation.PasswordError
 import com.treatwell.testkmm.login.presentation.SignupError
 import kotlinx.coroutines.Dispatchers
@@ -46,53 +47,59 @@ class LoginScreenViewModel(
     private val _sideEffects = MutableSharedFlow<LoginScreenSideEffect>()
     val sideEffects: Flow<LoginScreenSideEffect> = _sideEffects.asSharedFlow()
 
-    override fun checkValidityEmail(email: String): Result<Any?> {
-        return emailValidationUseCase(email = email)
-            .onSuccess {
-                __uiState = __uiState.copy(
-                    email = email,
-                    emailError = null
-                )
-            }
-            .onFailure { error ->
-                when (error) {
-                    is EmailValidationThrowable.EmptyEmailThrowable ->
-                        __uiState = __uiState.copy(
-                            email = email,
-                            emailError = EmailError.Empty
-                        )
+    override fun checkValidityEmail(email: String): SharedResult<Throwable, Any?> {
+        return emailValidationUseCase(email = email).apply {
+            fold(
+                succeeded = {
+                    __uiState = __uiState.copy(
+                        email = email,
+                        emailError = null
+                    )
+                },
+                failed = { error ->
+                    when (error) {
+                        is EmailValidationThrowable.EmptyEmailThrowable ->
+                            __uiState = __uiState.copy(
+                                email = email,
+                                emailError = EmailError.Empty
+                            )
 
-                    is EmailValidationThrowable.WrongFormatEmailThrowable ->
-                        __uiState = __uiState.copy(
-                            email = email,
-                            emailError = EmailError.WrongFormat
-                        )
+                        is EmailValidationThrowable.WrongFormatEmailThrowable ->
+                            __uiState = __uiState.copy(
+                                email = email,
+                                emailError = EmailError.WrongFormat
+                            )
+                    }
                 }
-            }
+            )
+        }
     }
 
-    override fun checkValidityPassword(password: String): Result<Any?> {
-        return passwordValidationUseCase(password)
-            .onSuccess {
-                __uiState = __uiState.copy(
-                    password = password,
-                    passwordError = null
-                )
-            }
-            .onFailure { error ->
-                when (error) {
-                    is PasswordValidationThrowable.EmptyPasswordThrowable ->
-                        __uiState = __uiState.copy(
-                            password = password,
-                            passwordError = PasswordError.Empty
-                        )
-                    is PasswordValidationThrowable.ShortPasswordThrowable ->
-                        __uiState = __uiState.copy(
-                            password = password,
-                            passwordError = PasswordError.Short
-                        )
+    override fun checkValidityPassword(password: String): SharedResult<Throwable, Any?> {
+        return passwordValidationUseCase(password).apply {
+            fold(
+                succeeded = {
+                    __uiState = __uiState.copy(
+                        password = password,
+                        passwordError = null
+                    )
+                },
+                failed = { error ->
+                    when (error) {
+                        is PasswordValidationThrowable.EmptyPasswordThrowable ->
+                            __uiState = __uiState.copy(
+                                password = password,
+                                passwordError = PasswordError.Empty
+                            )
+                        is PasswordValidationThrowable.ShortPasswordThrowable ->
+                            __uiState = __uiState.copy(
+                                password = password,
+                                passwordError = PasswordError.Short
+                            )
+                    }
                 }
-            }
+            )
+        }
     }
 
     override fun resetErrorState() {
@@ -104,7 +111,7 @@ class LoginScreenViewModel(
         val password = __uiState.password
         val emailCheck = checkValidityEmail(email)
         val passwordCheck = checkValidityPassword(password)
-        if (emailCheck.isSuccess && passwordCheck.isSuccess) {
+        if (emailCheck.isSuccess() && passwordCheck.isSuccess()) {
             __uiState = __uiState.copy(showLoading = true)
             viewModelScope.launch(Dispatchers.IO) {
                 signUpUseCase(email = email, password = password)
