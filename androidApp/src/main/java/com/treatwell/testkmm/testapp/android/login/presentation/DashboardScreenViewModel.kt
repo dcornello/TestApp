@@ -14,15 +14,15 @@ class DashboardScreenViewModel(
     override val fetchUserUseCase: FetchUserUseCase
 ) : ViewModel(), IDashboardScreenViewModel {
 
+    override var __uiState: DashboardScreenUIState
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
     override fun logout() {
         TODO("Not yet implemented")
     }
 
     override fun sendSideEffect(sideEffect: DashboardScreenSideEffect) {
-        TODO("Not yet implemented")
-    }
-
-    override fun updateUiState(uiState: DashboardScreenUIState) {
         TODO("Not yet implemented")
     }
 }

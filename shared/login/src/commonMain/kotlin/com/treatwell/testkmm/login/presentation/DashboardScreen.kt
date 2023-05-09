@@ -5,6 +5,7 @@ import com.treatwell.testkmm.login.domain.usecase.IsUserLoggedInUseCase
 import com.treatwell.testkmm.login.domain.usecase.LogOutUseCase
 
 interface IDashboardScreenViewModel {
+    var __uiState: DashboardScreenUIState
     val isUserLoggedInUseCase: IsUserLoggedInUseCase
     val logOutUseCase: LogOutUseCase
     val fetchUserUseCase: FetchUserUseCase
@@ -16,7 +17,6 @@ interface IDashboardScreenViewModel {
 
     fun logout()
     fun sendSideEffect(sideEffect: DashboardScreenSideEffect)
-    fun updateUiState(uiState: DashboardScreenUIState)
     fun goToLogin() {
         sendSideEffect(DashboardScreenSideEffect.GoToLoginScreen)
     }

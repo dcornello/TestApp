@@ -56,7 +56,16 @@ class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
     var sideEffects: [DashboardScreenSideEffect] = []
     
     @Published
-    public private(set) var uiState :DashboardScreenUIState = DashboardScreenUIState(showLoggedInView: false)
+    public private(set) var uiState :DashboardScreenUIState = DashboardScreenUIState(showLoggedInView: true)
+    
+    override var __uiState: DashboardScreenUIState {
+        get{
+            return self.uiState
+        }
+        set{
+            self.uiState = newValue
+        }
+    }
     
     override var isUserLoggedInUseCase: IsUserLoggedInUseCase {
         return LoginHelper().isUserLoggedInUseCase
@@ -77,17 +86,21 @@ class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
     override func sendSideEffect(sideEffect: DashboardScreenSideEffect) {
         sideEffects.append(sideEffect)
     }
-    
-    override func updateUiState(uiState: DashboardScreenUIState) {
-        self.uiState = uiState
-    }
-        
+  
     override func logout() {
         Task.init {
             do {
                 let result = try await logOutUseCase.invoke()
+                if(result is Success<String>){
+                    print("result \(String(describing: result))")
+                }else if(result is Error){
+                    
+                }
+                
+                __uiState = uiState.doCopy(showLoggedInView: isUserLoggedInUseCase.invoke())
                 print("isUserLoggedInUseCase \(String(describing: isUserLoggedInUseCase.invoke()))")
                 print("fetchUserUseCase \(String(describing: fetchUserUseCase.invoke()))")
+                let a = ""
             } catch {
                 print("error \(error)")
             }
