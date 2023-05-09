@@ -6,7 +6,7 @@ import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 
 interface ILoginScreenViewModel {
 
-    var uiState: LoginScreenUIState
+    var __uiState: LoginScreenUIState
     val signUpUseCase: SignUpUseCase
     val emailValidationUseCase: EmailValidationUseCase
     val passwordValidationUseCase: PasswordValidationUseCase

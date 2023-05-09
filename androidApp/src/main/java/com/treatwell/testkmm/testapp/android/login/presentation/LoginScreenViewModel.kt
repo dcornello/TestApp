@@ -28,7 +28,7 @@ class LoginScreenViewModel(
     override val passwordValidationUseCase: PasswordValidationUseCase
 ) : ViewModel(), ILoginScreenViewModel {
 
-    override var uiState: LoginScreenUIState
+    override var __uiState: LoginScreenUIState
         get() = _viewState.value
         set(newState) {
             _viewState.update { newState }
@@ -49,7 +49,7 @@ class LoginScreenViewModel(
     override fun checkValidityEmail(email: String): Result<Any?> {
         return emailValidationUseCase(email = email)
             .onSuccess {
-                uiState = uiState.copy(
+                __uiState = __uiState.copy(
                     email = email,
                     emailError = null
                 )
@@ -57,13 +57,13 @@ class LoginScreenViewModel(
             .onFailure { error ->
                 when (error) {
                     is EmailValidationThrowable.EmptyEmailThrowable ->
-                        uiState = uiState.copy(
+                        __uiState = __uiState.copy(
                             email = email,
                             emailError = EmailError.Empty
                         )
 
                     is EmailValidationThrowable.WrongFormatEmailThrowable ->
-                        uiState = uiState.copy(
+                        __uiState = __uiState.copy(
                             email = email,
                             emailError = EmailError.WrongFormat
                         )
@@ -74,7 +74,7 @@ class LoginScreenViewModel(
     override fun checkValidityPassword(password: String): Result<Any?> {
         return passwordValidationUseCase(password)
             .onSuccess {
-                uiState = uiState.copy(
+                __uiState = __uiState.copy(
                     password = password,
                     passwordError = null
                 )
@@ -82,12 +82,12 @@ class LoginScreenViewModel(
             .onFailure { error ->
                 when (error) {
                     is PasswordValidationThrowable.EmptyPasswordThrowable ->
-                        uiState = uiState.copy(
+                        __uiState = __uiState.copy(
                             password = password,
                             passwordError = PasswordError.Empty
                         )
                     is PasswordValidationThrowable.ShortPasswordThrowable ->
-                        uiState = uiState.copy(
+                        __uiState = __uiState.copy(
                             password = password,
                             passwordError = PasswordError.Short
                         )
@@ -96,28 +96,30 @@ class LoginScreenViewModel(
     }
 
     override fun resetErrorState() {
-        uiState = uiState.copy(userErrorMessage = null)
+        __uiState = __uiState.copy(userErrorMessage = null)
     }
 
     override fun login() {
-        val email = uiState.email
-        val password = uiState.password
+        val email = __uiState.email
+        val password = __uiState.password
         val emailCheck = checkValidityEmail(email)
         val passwordCheck = checkValidityPassword(password)
         if (emailCheck.isSuccess && passwordCheck.isSuccess) {
-            uiState = uiState.copy(showLoading = true)
+            __uiState = __uiState.copy(showLoading = true)
             viewModelScope.launch(Dispatchers.IO) {
                 signUpUseCase(email = email, password = password)
-                    .onFailure {
-                        uiState = uiState.copy(
-                            showLoading = false,
-                            userErrorMessage = SignupError.UNKNOWN
-                        )
-                    }
-                    .onSuccess {
-                        uiState = uiState.copy(showLoading = false)
-                        sendSideEffect(LoginScreenSideEffect.GoToLogoutScreen)
-                    }
+                    .fold(
+                        failed = {
+                            __uiState = __uiState.copy(
+                                showLoading = false,
+                                userErrorMessage = SignupError.UNKNOWN
+                            )
+                        },
+                        succeeded = {
+                            __uiState = __uiState.copy(showLoading = false)
+                            sendSideEffect(LoginScreenSideEffect.GoToLogoutScreen)
+                        }
+                    )
             }
         }
     }
