@@ -1,11 +1,15 @@
 package com.treatwell.testkmm.login.domain.usecase
 
+import com.treatwell.testkmm.login.data.Failure
+import com.treatwell.testkmm.login.data.SharedResult
+import com.treatwell.testkmm.login.data.Success
+
 class EmailValidationUseCase{
-    operator fun invoke(email: String): Result<Any?> {
+    operator fun invoke(email: String): SharedResult<Throwable, Any?> {
         return when {
-            email.isBlank() -> Result.failure(EmailValidationThrowable.EmptyEmailThrowable)
-            email.matches(emailAddressRegex).not() -> Result.failure(EmailValidationThrowable.WrongFormatEmailThrowable)
-            else -> Result.success(null)
+            email.isBlank() -> Failure(EmailValidationThrowable.EmptyEmailThrowable)
+            email.matches(emailAddressRegex).not() -> Failure(EmailValidationThrowable.WrongFormatEmailThrowable)
+            else -> Success(null)
         }
     }
 

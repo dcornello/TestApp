@@ -1,11 +1,15 @@
 package com.treatwell.testkmm.login.domain.usecase
 
+import com.treatwell.testkmm.login.data.Failure
+import com.treatwell.testkmm.login.data.SharedResult
+import com.treatwell.testkmm.login.data.Success
+
 class PasswordValidationUseCase {
-    operator fun invoke(password: String): Result<Any?> {
+    operator fun invoke(password: String): SharedResult<Throwable, Any?> {
         return when {
-            password.isBlank() -> Result.failure(PasswordValidationThrowable.EmptyPasswordThrowable)
-            password.length <= MIN_PASSWORD_LENGTH -> Result.failure(PasswordValidationThrowable.ShortPasswordThrowable)
-            else -> Result.success(null)
+            password.isBlank() -> Failure(PasswordValidationThrowable.EmptyPasswordThrowable)
+            password.length <= MIN_PASSWORD_LENGTH -> Failure(PasswordValidationThrowable.ShortPasswordThrowable)
+            else -> Success(null)
         }
     }
 
