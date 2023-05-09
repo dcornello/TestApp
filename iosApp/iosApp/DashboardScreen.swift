@@ -91,12 +91,14 @@ class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
         Task.init {
             do {
                 let result = try await logOutUseCase.invoke()
-                if(result is Success<String>){
-                    print("result \(String(describing: result))")
-                }else if(result is Error){
-                    
-                }
-                
+//                result.fold(
+//                    failed: {_ in
+//
+//                    },
+//                    succeeded : {_ in
+//
+//                    }
+//                )
                 __uiState = uiState.doCopy(showLoggedInView: isUserLoggedInUseCase.invoke())
                 print("isUserLoggedInUseCase \(String(describing: isUserLoggedInUseCase.invoke()))")
                 print("fetchUserUseCase \(String(describing: fetchUserUseCase.invoke()))")
