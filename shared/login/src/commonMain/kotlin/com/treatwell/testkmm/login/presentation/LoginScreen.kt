@@ -1,7 +1,9 @@
 package com.treatwell.testkmm.login.presentation
 
 import com.treatwell.testkmm.login.data.SharedResult
+import com.treatwell.testkmm.login.domain.usecase.EmailValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationUseCase
+import com.treatwell.testkmm.login.domain.usecase.PasswordValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 
@@ -20,11 +22,64 @@ interface ILoginScreenViewModel {
             onUserErrorDismissed = ::resetErrorState
         )
 
-    fun checkValidityEmail(email: String): SharedResult<Throwable, Any?>
+    fun checkValidityEmail(email: String): SharedResult<Throwable, Any?> {
+        return emailValidationUseCase(email = email).apply {
+            fold(
+                succeeded = {
+                    __uiState = __uiState.copy(
+                        email = email,
+                        emailError = null
+                    )
+                },
+                failed = { error ->
+                    when (error) {
+                        is EmailValidationThrowable.EmptyEmailThrowable ->
+                            __uiState = __uiState.copy(
+                                email = email,
+                                emailError = EmailError.Empty
+                            )
 
-    fun checkValidityPassword(password: String): SharedResult<Throwable, Any?>
+                        is EmailValidationThrowable.WrongFormatEmailThrowable ->
+                            __uiState = __uiState.copy(
+                                email = email,
+                                emailError = EmailError.WrongFormat
+                            )
+                    }
+                }
+            )
+        }
+    }
 
-    fun resetErrorState()
+    fun checkValidityPassword(password: String): SharedResult<Throwable, Any?>{
+        return passwordValidationUseCase(password).apply {
+            fold(
+                succeeded = {
+                    __uiState = __uiState.copy(
+                        password = password,
+                        passwordError = null
+                    )
+                },
+                failed = { error ->
+                    when (error) {
+                        is PasswordValidationThrowable.EmptyPasswordThrowable ->
+                            __uiState = __uiState.copy(
+                                password = password,
+                                passwordError = PasswordError.Empty
+                            )
+                        is PasswordValidationThrowable.ShortPasswordThrowable ->
+                            __uiState = __uiState.copy(
+                                password = password,
+                                passwordError = PasswordError.Short
+                            )
+                    }
+                }
+            )
+        }
+    }
+
+    fun resetErrorState(){
+        __uiState = __uiState.copy(userErrorMessage = null)
+    }
 
     fun login()
 
