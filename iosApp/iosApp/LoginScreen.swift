@@ -15,6 +15,8 @@ struct LoginScreen: View {
     @StateObject
     var viewModel : LoginViewModel = LoginViewModel()
     
+    @State private var showingAlert = false
+    
     @EnvironmentObject
     var navigator : LoginNavigator
     
@@ -34,55 +36,63 @@ struct LoginScreen: View {
         })
         
         VStack(spacing: 28){
-            Text("LoginScreen")
-            VStack(alignment: .leading, spacing: 11) {
-                Text("Login")
-                    .font(.system(size: 13, weight: .light))
-                    .padding(.horizontal,12)
-                    .foregroundColor(.secondary)
-                    .frame(height: 15, alignment: .leading)
-                TextField("", text: mailBinding)
-                    .font(.system(size: 17, weight: .thin))
-                    .foregroundColor(.primary)
-                    .frame(height: 44)
-                    .padding(.horizontal, 12)
-                    .background(Color.gray)
-                    .cornerRadius(4.0)
-                if let errorMail = self.viewModel.uiState.emailError{
-                    Text("error \(errorMail.name)")
+            if(viewModel.uiState.showLoading){
+                ProgressView()
+            }else{
+                Text("LoginScreen")
+                VStack(alignment: .leading, spacing: 11) {
+                    Text("Login")
                         .font(.system(size: 13, weight: .light))
                         .padding(.horizontal,12)
-                        .foregroundColor(.red)
+                        .foregroundColor(.secondary)
+                        .frame(height: 15, alignment: .leading)
+                    TextField("", text: mailBinding)
+                        .font(.system(size: 17, weight: .thin))
+                        .foregroundColor(.primary)
+                        .frame(height: 44)
+                        .padding(.horizontal, 12)
+                        .background(Color.gray)
+                        .cornerRadius(4.0)
+                    if let errorMail = self.viewModel.uiState.emailError{
+                        Text("error \(errorMail.name)")
+                            .font(.system(size: 13, weight: .light))
+                            .padding(.horizontal,12)
+                            .foregroundColor(.red)
+                    }
                 }
-            }
-            
-            VStack(alignment: .leading, spacing: 11) {
-                Text("Password")
-                    .font(.system(size: 13, weight: .light))
-                    .padding(.horizontal,12)
-                    .foregroundColor(.secondary)
-                    .frame(height: 15, alignment: .leading)
-                SecureField("", text: passwordBinding)
-                    .font(.system(size: 17, weight: .thin))
-                    .foregroundColor(.primary)
-                    .frame(height: 44)
-                    .padding(.horizontal, 12)
-                    .background(Color.gray)
-                    .cornerRadius(4.0)
-                if let errorPassword = self.viewModel.uiState.passwordError{
-                    Text("error \(errorPassword.name)")
+                
+                VStack(alignment: .leading, spacing: 11) {
+                    Text("Password")
                         .font(.system(size: 13, weight: .light))
                         .padding(.horizontal,12)
-                        .foregroundColor(.red)
+                        .foregroundColor(.secondary)
+                        .frame(height: 15, alignment: .leading)
+                    SecureField("", text: passwordBinding)
+                        .font(.system(size: 17, weight: .thin))
+                        .foregroundColor(.primary)
+                        .frame(height: 44)
+                        .padding(.horizontal, 12)
+                        .background(Color.gray)
+                        .cornerRadius(4.0)
+                    if let errorPassword = self.viewModel.uiState.passwordError{
+                        Text("error \(errorPassword.name)")
+                            .font(.system(size: 13, weight: .light))
+                            .padding(.horizontal,12)
+                            .foregroundColor(.red)
+                    }
                 }
+                
+                Button("LOGIN", action: viewModel.userActions.onSignupClicked)
             }
-            
-            Button("LOGIN", action: viewModel.userActions.onSignupClicked)
-            
-        }.onChange(of: viewModel.sideEffects, perform: {value in
+        }
+        .alert("Opps something was wrong", isPresented: $showingAlert) {
+            Button("OK", role: .cancel) { }
+        }
+        .onChange(of: viewModel.sideEffects, perform: {value in
             if let event = value.last {
                 switch event {
                     case is LoginScreenSideEffect.GoToLogoutScreen : navigator.navigateToRoot()
+                    case is LoginScreenSideEffect.ShowLogInError : showingAlert = true
                     default: print("not handled type \(event)")
                 }
             }
@@ -93,26 +103,22 @@ struct LoginScreen: View {
     }
 }
 
-struct LoginScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginScreen()
-    }
-}
-
 class LoginViewModel: LoginScreenViewModel, ObservableObject {
     
     @Published
     var sideEffects: [LoginScreenSideEffect] = []
     
     @Published
-    public private(set) var uiState :LoginScreenUIState = LoginScreenUIState(email: "", password: "", emailError: nil, passwordError: nil, showLoading: false, userErrorMessage: nil)
+    public private(set) var uiState :LoginScreenUIState = LoginScreenUIState(email: "", password: "", emailError: nil, passwordError: nil, showLoading: false)
     
     override var __uiState: LoginScreenUIState {
         get{
             return self.uiState
         }
         set{
-            self.uiState = newValue
+            DispatchQueue.main.async {
+                self.uiState = newValue
+            }
         }
     }
     
@@ -133,7 +139,9 @@ class LoginViewModel: LoginScreenViewModel, ObservableObject {
     }
     
     override func sendSideEffect(sideEffect_: LoginScreenSideEffect) {
-        sideEffects.append(sideEffect_)
+        DispatchQueue.main.async {
+            self.sideEffects.append(sideEffect_)
+        }
     }
     
     override func login() {
@@ -153,9 +161,9 @@ class LoginViewModel: LoginScreenViewModel, ObservableObject {
                         failed: { error in
                             print("logginError \(String(describing: error))")
                             self.__uiState = self.__uiState.changeValues(
-                                showLoading: false,
-                                userErrorMessage: SignupError.unknown
+                                showLoading: false
                             )
+                            self.sendSideEffect(sideEffect_: LoginScreenSideEffect.ShowLogInError())
                             return nil
                         },
                         succeeded: { user in
@@ -168,36 +176,22 @@ class LoginViewModel: LoginScreenViewModel, ObservableObject {
                 }catch {
                     print("catchedError \(error)")
                     self.__uiState = self.__uiState.changeValues(
-                        showLoading: false,
-                        userErrorMessage: SignupError.unknown
+                        showLoading: false
                     )
+                    self.sendSideEffect(sideEffect_: LoginScreenSideEffect.ShowLogInError())
                 }
             }
         }
     }
     
-
     deinit {
         sideEffects.removeAll()
     }
-    
-//    let usecase = LoginHelper().signUpUseCase
-//
-//    func createAccount() {
-//        Task.init {
-//            do {
-//                try await usecase.invoke(email: "cornello.diego89@gmail.com", password: "Password123456")
-//                print("done")
-//            } catch {
-//                print("error \(error)")
-//            }
-//        }
-//    }
 }
 
 extension LoginScreenUIState{
     
-    func changeValues(email: String? = nil, password: String? = nil, emailError: EmailError?=nil, passwordError: PasswordError?=nil, showLoading: Bool? = nil, userErrorMessage: SignupError? = nil) -> LoginScreenUIState {
-        return self.doCopy(email: email ?? self.email, password: password ?? self.password, emailError: emailError ?? self.emailError, passwordError: passwordError ?? self.passwordError, showLoading: showLoading ?? self.showLoading, userErrorMessage: userErrorMessage ?? self.userErrorMessage)
+    func changeValues(email: String? = nil, password: String? = nil, emailError: EmailError?=nil, passwordError: PasswordError?=nil, showLoading: Bool? = nil) -> LoginScreenUIState {
+        return self.doCopy(email: email ?? self.email, password: password ?? self.password, emailError: emailError ?? self.emailError, passwordError: passwordError ?? self.passwordError, showLoading: showLoading ?? self.showLoading)
     }
 }

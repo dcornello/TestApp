@@ -66,7 +66,9 @@ class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
             return self.uiState
         }
         set{
-            self.uiState = newValue
+            DispatchQueue.main.async {
+                self.uiState = newValue
+            }
         }
     }
     
@@ -96,21 +98,15 @@ class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
     }
     
     override func sendSideEffect(sideEffect: DashboardScreenSideEffect) {
-        sideEffects.append(sideEffect)
+        DispatchQueue.main.async {
+            self.sideEffects.append(sideEffect)
+        }
     }
   
     override func logout() {
         Task.init {
             do {
                 let result = try await logOutUseCase.invoke()
-//                result.fold(
-//                    failed: {_ in
-//
-//                    },
-//                    succeeded : {_ in
-//
-//                    }
-//                )
                 __uiState = uiState.doCopy(showLoggedInView: isUserLoggedInUseCase.invoke())
                 print("isUserLoggedInUseCase \(String(describing: isUserLoggedInUseCase.invoke()))")
                 print("fetchUserUseCase \(String(describing: fetchUserUseCase.invoke()))")

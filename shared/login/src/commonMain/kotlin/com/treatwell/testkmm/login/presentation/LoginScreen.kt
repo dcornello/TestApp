@@ -80,7 +80,6 @@ interface ILoginScreenViewModel {
     }
 
     fun resetErrorState(){
-        __uiState = __uiState.copy(userErrorMessage = null)
     }
 
     fun login()
@@ -96,8 +95,7 @@ data class LoginScreenUIState(
     val password: String = "",
     val emailError: EmailError? = null,
     val passwordError: PasswordError? = null,
-    val showLoading: Boolean = false,
-    val userErrorMessage: SignupError? = null
+    val showLoading: Boolean = false
 )
 
 enum class EmailError {
@@ -123,4 +121,5 @@ data class LoginScreenUserActions(
 
 sealed class LoginScreenSideEffect {
     object GoToLogoutScreen : LoginScreenSideEffect()
+    object ShowLogInError : LoginScreenSideEffect()
 }

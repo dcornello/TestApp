@@ -117,9 +117,9 @@ class LoginScreenViewModel(
                     .fold(
                         failed = {
                             __uiState = __uiState.copy(
-                                showLoading = false,
-                                userErrorMessage = SignupError.UNKNOWN
+                                showLoading = false
                             )
+                            sendSideEffect(LoginScreenSideEffect.ShowLogInError)
                         },
                         succeeded = {
                             __uiState = __uiState.copy(showLoading = false)
