@@ -10,6 +10,9 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		3A427A9D2A050A5A0085AB30 /* LoginNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A427A9C2A050A5A0085AB30 /* LoginNavigator.swift */; };
+		3A427A9F2A050FE10085AB30 /* DashboardScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A427A9E2A050FE10085AB30 /* DashboardScreen.swift */; };
+		3A427AA12A0510040085AB30 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A427AA02A0510040085AB30 /* LoginScreen.swift */; };
 		3AC355AF29EEF42600E208D5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3AC355AE29EEF42600E208D5 /* FirebaseAuth */; };
 		3AC355B129EEF42600E208D5 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 3AC355B029EEF42600E208D5 /* FirebaseAuthCombine-Community */; };
 		3AC355B329EEF4D100E208D5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AC355B229EEF4D100E208D5 /* GoogleService-Info.plist */; };
@@ -33,6 +36,9 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		3A427A9C2A050A5A0085AB30 /* LoginNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigator.swift; sourceTree = "<group>"; };
+		3A427A9E2A050FE10085AB30 /* DashboardScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardScreen.swift; sourceTree = "<group>"; };
+		3A427AA02A0510040085AB30 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		3AC355B229EEF4D100E208D5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -86,6 +92,9 @@
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
+				3A427A9C2A050A5A0085AB30 /* LoginNavigator.swift */,
+				3A427A9E2A050FE10085AB30 /* DashboardScreen.swift */,
+				3A427AA02A0510040085AB30 /* LoginScreen.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -197,7 +206,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A427A9D2A050A5A0085AB30 /* LoginNavigator.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				3A427A9F2A050FE10085AB30 /* DashboardScreen.swift in Sources */,
+				3A427AA12A0510040085AB30 /* LoginScreen.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -334,6 +346,7 @@
 					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -363,6 +376,7 @@
 					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

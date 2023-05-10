@@ -3,13 +3,19 @@ import shared
 
 struct ContentView: View {
     let greet = GreetingHelper().greet()
-    let viewModel = LoginScreenViewModel()
+    @StateObject private var navigator = LoginNavigator()
 
     var body: some View {
-        Text(greet)
-        Button("login", action: {
-            viewModel.createAccount()
-        })
+        NavigationStack(path: $navigator.path){
+            DashbardScreen().environmentObject(navigator)
+                .navigationDestination(for: Destination.self){destination in
+                    switch destination {
+                        case .dashboardScreen : DashbardScreen().environmentObject(navigator)
+                        case .loginScreen : LoginScreen().environmentObject(navigator)
+                        case .signupScreen : LoginScreen().environmentObject(navigator)
+                    }
+                }
+        }
     }
 }
 
@@ -19,18 +25,6 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-class LoginScreenViewModel {
-    
-    let usecase = LoginHelper().signUpUseCase
-    
-    func createAccount() {
-        Task.init {
-            do {
-                try await usecase.invoke()
-                print("done")
-            } catch {
-                print("error \(error)")
-            }
-        }
-    }
-}
+
+
+
