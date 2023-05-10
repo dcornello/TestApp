@@ -2,19 +2,13 @@ package com.treatwell.testkmm.testapp.android.login.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.treatwell.testkmm.login.data.SharedResult
-import com.treatwell.testkmm.login.domain.usecase.EmailValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.EmailValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.LogInUseCase
-import com.treatwell.testkmm.login.domain.usecase.PasswordValidationThrowable
 import com.treatwell.testkmm.login.domain.usecase.PasswordValidationUseCase
 import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
-import com.treatwell.testkmm.login.presentation.EmailError
 import com.treatwell.testkmm.login.presentation.ILoginScreenViewModel
 import com.treatwell.testkmm.login.presentation.LoginScreenSideEffect
 import com.treatwell.testkmm.login.presentation.LoginScreenUIState
-import com.treatwell.testkmm.login.presentation.PasswordError
-import com.treatwell.testkmm.login.presentation.SignupError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

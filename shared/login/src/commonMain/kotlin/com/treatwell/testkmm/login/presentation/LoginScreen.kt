@@ -108,10 +108,6 @@ enum class PasswordError {
     Short
 }
 
-enum class SignupError {
-    UNKNOWN
-}
-
 data class LoginScreenUserActions(
     val onSignupClicked: () -> Unit,
     val onEmailValueChanged: (email: String) -> Unit,
