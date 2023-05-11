@@ -11,7 +11,7 @@ import com.treatwell.testkmm.login.domain.usecase.SignUpUseCase
 interface ILoginScreenViewModel {
 
     var __uiState: LoginScreenUIState
-    val logInUseCase : LogInUseCase
+    val logInUseCase: LogInUseCase
     val signUpUseCase: SignUpUseCase
     val emailValidationUseCase: EmailValidationUseCase
     val passwordValidationUseCase: PasswordValidationUseCase
@@ -52,7 +52,7 @@ interface ILoginScreenViewModel {
         }
     }
 
-    fun checkValidityPassword(password: String): SharedResult<Throwable, Any?>{
+    fun checkValidityPassword(password: String): SharedResult<Throwable, Any?> {
         return passwordValidationUseCase(password).apply {
             fold(
                 succeeded = {
@@ -79,12 +79,37 @@ interface ILoginScreenViewModel {
         }
     }
 
-    fun resetErrorState(){
+    fun resetErrorState() {
     }
 
-    fun login()
+    fun login() {
+        val email = __uiState.email
+        val password = __uiState.password
+        val emailCheck = checkValidityEmail(email)
+        val passwordCheck = checkValidityPassword(password)
+        if (emailCheck.isSuccess() && passwordCheck.isSuccess()) {
+            __uiState = __uiState.copy(showLoading = true)
+            launchInViewModelScope(catchErrors = { __uiState = __uiState.copy(showLoading = false) }) {
+                logInUseCase(email = email, password = password)
+                    .fold(
+                        failed = {
+                            __uiState = __uiState.copy(
+                                showLoading = false
+                            )
+                            sendSideEffect(LoginScreenSideEffect.ShowLogInError)
+                        },
+                        succeeded = {
+                            __uiState = __uiState.copy(showLoading = false)
+                            sendSideEffect(LoginScreenSideEffect.GoToLogoutScreen)
+                        }
+                    )
+            }
+        }
+    }
 
     fun sendSideEffect(sideEffect: LoginScreenSideEffect)
+
+    fun launchInViewModelScope(catchErrors: () -> Unit = {}, function: suspend () -> Unit)
 }
 
 // Use this for iOs automatic implementation

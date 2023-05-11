@@ -99,32 +99,38 @@ class LoginScreenViewModel(
 //        __uiState = __uiState.copy(userErrorMessage = null)
 //    }
 
-    override fun login() {
-        val email = __uiState.email
-        val password = __uiState.password
-        val emailCheck = checkValidityEmail(email)
-        val passwordCheck = checkValidityPassword(password)
-        if (emailCheck.isSuccess() && passwordCheck.isSuccess()) {
-            __uiState = __uiState.copy(showLoading = true)
-            viewModelScope.launch(Dispatchers.IO) {
-                signUpUseCase(email = email, password = password)
-                    .fold(
-                        failed = {
-                            __uiState = __uiState.copy(
-                                showLoading = false
-                            )
-                            sendSideEffect(LoginScreenSideEffect.ShowLogInError)
-                        },
-                        succeeded = {
-                            __uiState = __uiState.copy(showLoading = false)
-                            sendSideEffect(LoginScreenSideEffect.GoToLogoutScreen)
-                        }
-                    )
-            }
-        }
-    }
+//    override fun login() {
+//        val email = __uiState.email
+//        val password = __uiState.password
+//        val emailCheck = checkValidityEmail(email)
+//        val passwordCheck = checkValidityPassword(password)
+//        if (emailCheck.isSuccess() && passwordCheck.isSuccess()) {
+//            __uiState = __uiState.copy(showLoading = true)
+//            viewModelScope.launch(Dispatchers.IO) {
+//                signUpUseCase(email = email, password = password)
+//                    .fold(
+//                        failed = {
+//                            __uiState = __uiState.copy(
+//                                showLoading = false
+//                            )
+//                            sendSideEffect(LoginScreenSideEffect.ShowLogInError)
+//                        },
+//                        succeeded = {
+//                            __uiState = __uiState.copy(showLoading = false)
+//                            sendSideEffect(LoginScreenSideEffect.GoToLogoutScreen)
+//                        }
+//                    )
+//            }
+//        }
+//    }
 
     override fun sendSideEffect(sideEffect: LoginScreenSideEffect) {
         viewModelScope.launch { _sideEffects.emit(sideEffect) }
+    }
+
+    override fun launchInViewModelScope(catchErrors: () -> Unit, function: suspend () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            function()
+        }
     }
 }

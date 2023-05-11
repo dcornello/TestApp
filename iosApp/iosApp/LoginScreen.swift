@@ -144,42 +144,12 @@ class LoginViewModel: LoginScreenViewModel, ObservableObject {
         }
     }
     
-    override func login() {
-        let email = __uiState.email
-        let password = __uiState.password
-        print("email \(email)")
-        print("password \(password)")
-        let emailCheck = checkValidityEmail(email: email)
-        print("emailCheck \(String(describing: emailCheck))")
-        let passwordCheck = checkValidityPassword(password: password)
-        if (emailCheck.isSuccess() && passwordCheck.isSuccess()) {
-            __uiState = __uiState.changeValues(showLoading: true)
-            Task.init {
-                do {
-                    let result = try await logInUseCase.invoke(email: email, password: password)
-                    result.fold(
-                        failed: { error in
-                            print("logginError \(String(describing: error))")
-                            self.__uiState = self.__uiState.changeValues(
-                                showLoading: false
-                            )
-                            self.sendSideEffect(sideEffect_: LoginScreenSideEffect.ShowLogInError())
-                            return nil
-                        },
-                        succeeded: { user in
-                            print("logginSuccess \(String(describing: user))")
-                            self.__uiState = self.__uiState.changeValues(showLoading: false)
-                            self.sendSideEffect(sideEffect_: LoginScreenSideEffect.GoToLogoutScreen())
-                            return nil
-                        }
-                    )
-                }catch {
-                    print("catchedError \(error)")
-                    self.__uiState = self.__uiState.changeValues(
-                        showLoading: false
-                    )
-                    self.sendSideEffect(sideEffect_: LoginScreenSideEffect.ShowLogInError())
-                }
+    override func launchInViewModelScope(catchErrors: @escaping () -> Void, function: KotlinSuspendFunction0) {
+        Task.init {
+            do {
+                try await function.invoke()
+            }catch {
+                catchErrors()
             }
         }
     }
