@@ -89,7 +89,7 @@ interface ILoginScreenViewModel {
         val passwordCheck = checkValidityPassword(password)
         if (emailCheck.isSuccess() && passwordCheck.isSuccess()) {
             __uiState = __uiState.copy(showLoading = true)
-            launchInViewModelScope(catchErrors = { __uiState = __uiState.copy(showLoading = false) }) {
+            launchInViewModelScope {
                 logInUseCase(email = email, password = password)
                     .fold(
                         failed = {
@@ -109,7 +109,7 @@ interface ILoginScreenViewModel {
 
     fun sendSideEffect(sideEffect: LoginScreenSideEffect)
 
-    fun launchInViewModelScope(catchErrors: () -> Unit = {}, function: suspend () -> Unit)
+    fun launchInViewModelScope(function: suspend () -> Unit)
 }
 
 // Use this for iOs automatic implementation

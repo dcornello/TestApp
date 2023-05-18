@@ -128,7 +128,7 @@ class LoginScreenViewModel(
         viewModelScope.launch { _sideEffects.emit(sideEffect) }
     }
 
-    override fun launchInViewModelScope(catchErrors: () -> Unit, function: suspend () -> Unit) {
+    override fun launchInViewModelScope(function: suspend () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             function()
         }

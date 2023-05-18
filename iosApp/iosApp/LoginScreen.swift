@@ -144,18 +144,10 @@ class LoginViewModel: LoginScreenViewModel, ObservableObject {
         }
     }
     
-    override func launchInViewModelScope(catchErrors: @escaping () -> Void, function: KotlinSuspendFunction0) {
+    override func launchInViewModelScope(function: KotlinSuspendFunction0) {
         Task.init {
-            do {
-                try await function.invoke()
-            }catch {
-                catchErrors()
-            }
+            try? await function.invoke()
         }
-    }
-    
-    deinit {
-        sideEffects.removeAll()
     }
 }
 

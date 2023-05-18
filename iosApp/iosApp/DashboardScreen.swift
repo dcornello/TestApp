@@ -102,17 +102,10 @@ class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
             self.sideEffects.append(sideEffect)
         }
     }
-  
-    override func logout() {
+    
+    override func launchInViewModelScope(function: KotlinSuspendFunction0) {
         Task.init {
-            do {
-                let result = try await logOutUseCase.invoke()
-                __uiState = uiState.doCopy(showLoggedInView: isUserLoggedInUseCase.invoke())
-                print("isUserLoggedInUseCase \(String(describing: isUserLoggedInUseCase.invoke()))")
-                print("fetchUserUseCase \(String(describing: fetchUserUseCase.invoke()))")
-            } catch {
-                print("error \(error)")
-            }
+            try? await function.invoke()
         }
     }
 }
