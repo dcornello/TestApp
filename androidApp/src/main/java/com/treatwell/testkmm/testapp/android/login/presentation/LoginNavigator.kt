@@ -8,10 +8,13 @@ import androidx.navigation.compose.composable
 @Composable
 fun LoginNavigationGraph(
     navController: NavHostController
-){
+) {
     return NavHost(navController = navController, startDestination = LoginNavigationGraphRoute.DashboardScreen) {
         composable(LoginNavigationGraphRoute.DashboardScreen) {
-
+            DashboardScreenDestination(navController)
+        }
+        composable(route = LoginNavigationGraphRoute.LogInScreen) {
+            LoginScreenDestination(navController)
         }
     }
 }

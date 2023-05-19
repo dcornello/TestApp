@@ -46,4 +46,8 @@ class DashboardScreenViewModel(
             function()
         }
     }
+
+    fun update() {
+        __uiState = viewState.value.copy(showLoggedInView = isUserLoggedInUseCase())
+    }
 }
