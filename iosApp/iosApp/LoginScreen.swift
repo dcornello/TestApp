@@ -35,12 +35,12 @@ struct LoginScreen: View {
             self.viewModel.userActions.onPasswordValueChanged(txt)
         })
         
-        VStack(spacing: 28){
+        VStack{
             if(viewModel.uiState.showLoading){
                 ProgressView()
             }else{
                 Text("LoginScreen")
-                VStack(alignment: .leading, spacing: 11) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Login")
                         .font(.system(size: 13, weight: .light))
                         .padding(.horizontal,12)
@@ -61,7 +61,7 @@ struct LoginScreen: View {
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 11) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Password")
                         .font(.system(size: 13, weight: .light))
                         .padding(.horizontal,12)
@@ -85,6 +85,7 @@ struct LoginScreen: View {
                 Button("LOGIN", action: viewModel.userActions.onSignupClicked)
             }
         }
+        .padding(.horizontal,12)
         .alert("Opps something was wrong", isPresented: $showingAlert) {
             Button("OK", role: .cancel) { }
         }

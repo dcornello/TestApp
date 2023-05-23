@@ -62,6 +62,7 @@ fun DashboardScreen(uiState: DashboardScreenUIState, userActions: DashboardScree
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "I'm an Android App")
         if (uiState.showLoggedInView) {
+            Text(text = "but with a shared heart!!!")
             Button(onClick = userActions.onLogOutButtonClicked) {
                 Text(text = "Logout")
             }
