@@ -7,10 +7,10 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack(path: $navigator.path){
-            DashbardScreen().environmentObject(navigator)
+            DashboardScreen().environmentObject(navigator)
                 .navigationDestination(for: Destination.self){destination in
                     switch destination {
-                        case .dashboardScreen : DashbardScreen().environmentObject(navigator)
+                        case .dashboardScreen : DashboardScreen().environmentObject(navigator)
                         case .loginScreen : LoginScreen().environmentObject(navigator)
                         case .signupScreen : LoginScreen().environmentObject(navigator)
                     }

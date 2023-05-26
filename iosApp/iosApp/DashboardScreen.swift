@@ -10,19 +10,19 @@ import SwiftUI
 import shared
 import Combine
 
-struct DashbardScreen: View {
+struct DashboardScreen: View {
     
     @StateObject
-    var viewModel : DashbardViewModel = DashbardViewModel()
+    var viewModel : DashboardViewModel = DashboardViewModel()
     
     @EnvironmentObject
     var navigator : LoginNavigator
         
     var body: some View {
         VStack{
-            Text("Dashboard")
+            Text("I'm an iOs App")
             if(viewModel.uiState.showLoggedInView){
-                Text("loggedIn")
+                Text("but with a shared heart!!!")
                 Button("LogOut", action: viewModel.userActions.onLogOutButtonClicked)
             }else{
                 Button("goToLogin", action: viewModel.userActions.onGoLogInButtonClicked)
@@ -46,14 +46,7 @@ struct DashbardScreen: View {
     }
 }
 
-struct DashboardScreen_Previews: PreviewProvider {
-
-    static var previews: some View {
-        DashbardScreen()
-    }
-}
-
-class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
+class DashboardViewModel : DashboardScreenViewModel, ObservableObject {
     
     @Published
     var sideEffects: [DashboardScreenSideEffect] = []
@@ -102,17 +95,10 @@ class DashbardViewModel : DashboardScreenViewModel, ObservableObject {
             self.sideEffects.append(sideEffect)
         }
     }
-  
-    override func logout() {
+    
+    override func launchInViewModelScope(function: KotlinSuspendFunction0) {
         Task.init {
-            do {
-                let result = try await logOutUseCase.invoke()
-                __uiState = uiState.doCopy(showLoggedInView: isUserLoggedInUseCase.invoke())
-                print("isUserLoggedInUseCase \(String(describing: isUserLoggedInUseCase.invoke()))")
-                print("fetchUserUseCase \(String(describing: fetchUserUseCase.invoke()))")
-            } catch {
-                print("error \(error)")
-            }
+            try? await function.invoke()
         }
     }
 }

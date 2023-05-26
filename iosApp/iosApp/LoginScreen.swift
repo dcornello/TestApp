@@ -35,12 +35,12 @@ struct LoginScreen: View {
             self.viewModel.userActions.onPasswordValueChanged(txt)
         })
         
-        VStack(spacing: 28){
+        VStack{
             if(viewModel.uiState.showLoading){
                 ProgressView()
             }else{
                 Text("LoginScreen")
-                VStack(alignment: .leading, spacing: 11) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Login")
                         .font(.system(size: 13, weight: .light))
                         .padding(.horizontal,12)
@@ -61,7 +61,7 @@ struct LoginScreen: View {
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 11) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Password")
                         .font(.system(size: 13, weight: .light))
                         .padding(.horizontal,12)
@@ -85,6 +85,7 @@ struct LoginScreen: View {
                 Button("LOGIN", action: viewModel.userActions.onSignupClicked)
             }
         }
+        .padding(.horizontal,12)
         .alert("Opps something was wrong", isPresented: $showingAlert) {
             Button("OK", role: .cancel) { }
         }
@@ -144,48 +145,10 @@ class LoginViewModel: LoginScreenViewModel, ObservableObject {
         }
     }
     
-    override func login() {
-        let email = __uiState.email
-        let password = __uiState.password
-        print("email \(email)")
-        print("password \(password)")
-        let emailCheck = checkValidityEmail(email: email)
-        print("emailCheck \(String(describing: emailCheck))")
-        let passwordCheck = checkValidityPassword(password: password)
-        if (emailCheck.isSuccess() && passwordCheck.isSuccess()) {
-            __uiState = __uiState.changeValues(showLoading: true)
-            Task.init {
-                do {
-                    let result = try await logInUseCase.invoke(email: email, password: password)
-                    result.fold(
-                        failed: { error in
-                            print("logginError \(String(describing: error))")
-                            self.__uiState = self.__uiState.changeValues(
-                                showLoading: false
-                            )
-                            self.sendSideEffect(sideEffect_: LoginScreenSideEffect.ShowLogInError())
-                            return nil
-                        },
-                        succeeded: { user in
-                            print("logginSuccess \(String(describing: user))")
-                            self.__uiState = self.__uiState.changeValues(showLoading: false)
-                            self.sendSideEffect(sideEffect_: LoginScreenSideEffect.GoToLogoutScreen())
-                            return nil
-                        }
-                    )
-                }catch {
-                    print("catchedError \(error)")
-                    self.__uiState = self.__uiState.changeValues(
-                        showLoading: false
-                    )
-                    self.sendSideEffect(sideEffect_: LoginScreenSideEffect.ShowLogInError())
-                }
-            }
+    override func launchInViewModelScope(function: KotlinSuspendFunction0) {
+        Task.init {
+            try? await function.invoke()
         }
-    }
-    
-    deinit {
-        sideEffects.removeAll()
     }
 }
 

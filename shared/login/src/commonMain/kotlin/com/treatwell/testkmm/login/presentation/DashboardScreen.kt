@@ -15,11 +15,19 @@ interface IDashboardScreenViewModel {
             onLogOutButtonClicked = ::logout
         )
 
-    fun logout()
-    fun sendSideEffect(sideEffect: DashboardScreenSideEffect)
+    fun logout() {
+        launchInViewModelScope{
+            logOutUseCase()
+            __uiState = __uiState.copy(showLoggedInView = isUserLoggedInUseCase())
+        }
+    }
+
     fun goToLogin() {
         sendSideEffect(DashboardScreenSideEffect.GoToLoginScreen)
     }
+
+    fun sendSideEffect(sideEffect: DashboardScreenSideEffect)
+    fun launchInViewModelScope(function: suspend () -> Unit)
 }
 
 // Use this for iOs automatic implementation

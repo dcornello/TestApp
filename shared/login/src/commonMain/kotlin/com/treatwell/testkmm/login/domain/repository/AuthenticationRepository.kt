@@ -7,9 +7,9 @@ interface AuthenticationRepository {
 
     fun isUserLoggedIn(): Boolean
 
-    suspend fun signupUser(email: String = "diego.cornello@treatwell.com", password: String = "Password_123"): SharedResult<Throwable, User>
+    suspend fun signupUser(email: String = "diego.cornello@treatwell.com", password: String = "Password123"): SharedResult<Throwable, User>
 
-    suspend fun loginUser(email: String = "diego.cornello@treatwell.com", password: String = "Password_123"): SharedResult<Throwable, User>
+    suspend fun loginUser(email: String = "diego.cornello@treatwell.com", password: String = "Password123"): SharedResult<Throwable, User>
 
     suspend fun logout(): SharedResult<Throwable, String>
 
