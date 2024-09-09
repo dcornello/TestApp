@@ -151,10 +151,3 @@ class LoginViewModel: LoginScreenViewModel, ObservableObject {
         }
     }
 }
-
-extension LoginScreenUIState{
-    
-    func changeValues(email: String? = nil, password: String? = nil, emailError: EmailError?=nil, passwordError: PasswordError?=nil, showLoading: Bool? = nil) -> LoginScreenUIState {
-        return self.doCopy(email: email ?? self.email, password: password ?? self.password, emailError: emailError ?? self.emailError, passwordError: passwordError ?? self.passwordError, showLoading: showLoading ?? self.showLoading)
-    }
-}
